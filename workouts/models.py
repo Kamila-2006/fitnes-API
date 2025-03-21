@@ -9,6 +9,9 @@ class Workout(models.Model):
     duration = models.DurationField()
     exercises = models.ManyToManyField(Exercise, through='WorkoutExercise')
 
+    def __str__(self):
+        return f'Workout for {self.user}'
+
 class WorkoutExercise(models.Model):
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE, related_name='workout_exercises')
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name='workout_exercises')
