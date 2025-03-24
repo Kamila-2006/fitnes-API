@@ -7,10 +7,11 @@ class WorkoutSerializer(serializers.ModelSerializer):
         model = Workout
         fields = ['id', 'date', 'duration', 'exercises']
 
-    def get_exercises(self, obj):
-        workout_exercises = WorkoutExercise.objects.filter(workout=obj)
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        workout_exercises = WorkoutExercise.objects.filter(workout=instance)
 
-        return [
+        representation['exercises'] = [
             {
                 'id': workout_exercise.exercise.id,
                 'name': workout_exercise.exercise.name,
@@ -20,3 +21,12 @@ class WorkoutSerializer(serializers.ModelSerializer):
             }
             for workout_exercise in workout_exercises
         ]
+        return representation
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+
+        workout = Workout.objects.create(**validated_data)
+
+        return workout
