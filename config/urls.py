@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/', include('workouts.urls'), name='workouts'),
     path('api/', include('healthmetrics.urls'), name='health-metrics'),
     path('api/', include('foods.urls'), name='foods'),
+    path('api/', include('meals.urls'), name='meals'),
 ]
