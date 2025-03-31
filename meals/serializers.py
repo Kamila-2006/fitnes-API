@@ -34,3 +34,23 @@ class MealSerializer(serializers.ModelSerializer):
             MealFood.objects.create(meal=meal, food=food, quantity=item['quantity'])
 
         return meal
+
+    def update(self, instance, validated_data):
+        foods_data = validated_data.pop('foods', [])
+
+        instance.date = validated_data.get('date', instance.date)
+        instance.meal_type = validated_data.get('meal_type', instance.meal_type)
+        instance.save()
+
+        if foods_data:
+            instance.meal_food.all().delete()
+
+            for item in foods_data:
+                food = Food.objects.get(id=item['food'])
+                MealFood.objects.create(
+                    meal=instance,
+                    food=food,
+                    quantity=item['quantity']
+                )
+
+        return instance
