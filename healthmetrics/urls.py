@@ -4,7 +4,7 @@ from . import views
 
 
 router = DefaultRouter()
-router.register(r'healthmetrics', views.HealthMetrikViewSet, basename='health-metrics')
+router.register(r'health-metrics', views.HealthMetrikViewSet, basename='health-metrics')
 
 urlpatterns = [
     path('', include(router.urls)),
