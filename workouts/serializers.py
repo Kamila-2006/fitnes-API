@@ -42,3 +42,25 @@ class WorkoutSerializer(serializers.ModelSerializer):
             )
 
         return workout
+
+    def update(self, instance, validated_data):
+        exercises_data = validated_data.pop('exercises', [])
+
+        instance.date = validated_data.get('date', instance.date)
+        instance.duration = validated_data.get('duration', instance.duration)
+        instance.save()
+
+        if exercises_data:
+            instance.workout_exercises.all().delete()
+
+            for item in exercises_data:
+                exercise = Exercise.objects.get(id=item['exercise'])
+                WorkoutExercise.objects.create(
+                    workout=instance,
+                    exercise=exercise,
+                    sets=item['sets'],
+                    reps=item['reps'],
+                    weight=item['weight']
+                )
+
+        return instance
